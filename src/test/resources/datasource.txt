@@ -1,0 +1,9 @@
+Provider
+================
+
+map customerInfo
+    INN = 453453
+    speed = 30
+    AcctId = 235234
+    Customer    =    Putin
+    CC = 32323

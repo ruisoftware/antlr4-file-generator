@@ -1,0 +1,11 @@
+FamilyTree
+================
+
+map family
+    mother = Marie
+    father = Anton
+    age = 23
+
+map cars
+    bmw = 234
+    vw = old

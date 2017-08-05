@@ -1,11 +1,40 @@
 FamilyTree
 ================
+map a (
+  xx = [1, [],  2]
+)
 
-map family
+
+map a1 (
+    vw = [
+            1,
+            map x (
+                f = [99]
+            ),
+            2
+         ]
+)
+
+map family (
     mother = Marie
-    father = Anton
-    age = 23
+    father =
+        map sub (
+            a = 1
+            b = 2
+        )
+    age = 34
+)
 
-map cars
+map cars (
     bmw = 234
-    vw = old
+    vw = [
+            old,
+            55,
+            [new,
+            [ map k (a = 200),
+              map k (a = 300  f=[99, []])
+            ],
+             [2]],
+            [45, _ege]
+         ]
+)

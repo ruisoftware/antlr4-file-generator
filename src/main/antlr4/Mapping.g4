@@ -7,20 +7,23 @@ config:
     EOF;
 
 map:
-    mapH=mapHeader
-    mapE=mapEntry+;
+    mapHeader
+    '(' mapEntry+ ')';
 
 mapHeader:
-    'map' mapName=Str;
+    'map' name=Str;
 
 mapEntry:
-    mapKey=Str '=' mapValue=value;
+    key=Str '=' val=value;
 
 value:
-    isNumber=Number | isStr=Str | isArray=array | isMap=map;
+    isNumber=Number | isStr=Str | array | mapValue;
 
 array:
     '[' (value (',' value)*)? ']';
+
+mapValue:
+    map;
 
 Str:
     ('A'..'Z' | 'a'..'z' | '_')('A'..'Z' | 'a'..'z' | '0'..'9' | '_')*;

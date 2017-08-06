@@ -29,13 +29,7 @@ public class DataFactory {
 
             // region enter methods
             @Override
-            public void enterConfig(MappingParser.ConfigContext ctx) {
-                System.out.println("enterConfig");
-            }
-
-            @Override
             public void enterMap(MappingParser.MapContext ctx) {
-                System.out.println("enterMap " + ctx.getText());
                 data.appendNewMap();
             }
 
@@ -46,7 +40,6 @@ public class DataFactory {
 
             @Override
             public void enterMapValue(MappingParser.MapValueContext ctx) {
-                System.out.println("enterMapValue " + ctx.getText());
                 data.pushMapToValueToBeInsertedLater();
             }
             // endregion
@@ -55,7 +48,6 @@ public class DataFactory {
             // region exit methods
             @Override
             public void exitConfig(MappingParser.ConfigContext ctx) {
-                System.out.println("exitConfig");
                 data.setFilename(ctx.filename.getText());
             }
 
@@ -87,13 +79,7 @@ public class DataFactory {
 
             @Override
             public void exitMapValue(MappingParser.MapValueContext ctx) {
-                System.out.println("exitMapValue " + ctx.getText());
                 data.popMapToValueToBeInsertedLater();
-            }
-
-            @Override
-            public void exitMap(MappingParser.MapContext ctx) {
-                System.out.println("exitMap " + ctx.getText());
             }
             // endregion
         });

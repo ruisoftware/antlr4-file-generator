@@ -1,7 +1,9 @@
 package generator;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -13,11 +15,35 @@ public class Data {
     private List<DataMap> maps = new LinkedList<>();
     private Object valueToBeInsertedLater;
     private Stack<DataSet> stackOfDataSets = new Stack<>();
-    private byte qtDataMaps, qtDataArrays;
+    private byte qtMapsInStack, qtArraysInStack;
+    private Set<Class> importsRequired = new HashSet<>();
+
+    /**
+     * Determines if there is at least one Map or Array being used.
+     * Needed by the JavaGenerator, to know if a Java <code>import</code> should be generated for the classes that implement Map or Array.
+     **/
+    private boolean containsMap, containsArray;
+
+    public List<DataMap> getMaps() {
+        return maps;
+    }
+
+    public boolean isContainsMap() {
+        return containsMap;
+    }
+
+    public boolean isContainsArray() {
+        return containsArray;
+    }
+
+    public Set<Class> getImportsRequired() {
+        return importsRequired;
+    }
 
     public void appendNewMap() {
-        if (qtDataMaps == 0) {
+        if (qtMapsInStack == 0) {
             maps.add(new DataMap());
+            containsMap = true;
         }
     }
 
@@ -52,10 +78,11 @@ public class Data {
     }
 
     public void popArrayToValueToBeInsertedLater() {
-        if (qtDataArrays > 0) {
+        if (qtArraysInStack > 0) {
             this.valueToBeInsertedLater = pop();
             DataArray lastDataArray = (DataArray) this.valueToBeInsertedLater;
-            if (qtDataArrays > 0 || qtDataMaps > 0) {
+            importsRequired.add(lastDataArray.getClassOfElements());
+            if (qtArraysInStack > 0 || qtMapsInStack > 0) {
                 this.valueToBeInsertedLater = stackOfDataSets.peek();
                 setValueToBeInsertedLater(lastDataArray);
             }
@@ -68,10 +95,11 @@ public class Data {
     }
 
     public void popMapToValueToBeInsertedLater() {
-        if (qtDataMaps > 0) {
+        if (qtMapsInStack > 0) {
             this.valueToBeInsertedLater = pop();
             DataMap lastDataMap = (DataMap) this.valueToBeInsertedLater;
-            if (qtDataArrays > 0 || qtDataMaps > 0) {
+            importsRequired.add(lastDataMap.getClassOfValues());
+            if (qtArraysInStack > 0 || qtMapsInStack > 0) {
                 this.valueToBeInsertedLater = stackOfDataSets.peek();
                 setValueToBeInsertedLater(lastDataMap);
             }
@@ -79,26 +107,28 @@ public class Data {
     }
 
     private DataMap getLastDataMap() {
-        return qtDataMaps == 0 ? maps.get(maps.size() - 1) : (DataMap) stackOfDataSets.peek();
+        return qtMapsInStack == 0 ? maps.get(maps.size() - 1) : (DataMap) stackOfDataSets.peek();
     }
 
     private void pushDataMap() {
         stackOfDataSets.push((DataMap) this.valueToBeInsertedLater);
-        ++qtDataMaps;
+        ++qtMapsInStack;
+        containsMap = true;
     }
 
     private void pushDataArray() {
         stackOfDataSets.push((DataArray) this.valueToBeInsertedLater);
-        ++qtDataArrays;
+        ++qtArraysInStack;
+        containsArray = true;
     }
 
     private DataSet pop() {
         DataSet popObj = stackOfDataSets.pop();
         if (popObj instanceof DataArray) {
-            --qtDataArrays;
+            --qtArraysInStack;
         } else {
             if (popObj instanceof DataMap) {
-                --qtDataMaps;
+                --qtMapsInStack;
             }
         }
         return popObj;

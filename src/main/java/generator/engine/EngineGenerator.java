@@ -11,6 +11,7 @@ import java.nio.file.Files;
  */
 public abstract class EngineGenerator {
 
+    private final static String OUTPUT_DIR = "output/";
     private Writer writer;
     private byte indentation;
     private final String INDENT = "    ";
@@ -45,7 +46,11 @@ public abstract class EngineGenerator {
         if (data != null) {
             try {
                 if (writer == null) {
-                    File file = new File("output/" + getFileNameOnDisk());
+                    File path = new File(OUTPUT_DIR);
+                    if (!path.exists()) {
+                        path.mkdir();
+                    }
+                    File file = new File(OUTPUT_DIR + getFileNameOnDisk());
                     writer = Files.newBufferedWriter(file.toPath(), Charset.defaultCharset());
                     generatedFile = file.getAbsolutePath();
                 }

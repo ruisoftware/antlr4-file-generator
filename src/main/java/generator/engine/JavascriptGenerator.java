@@ -4,6 +4,7 @@ import generator.Data;
 import generator.DataArray;
 import generator.DataMap;
 import generator.DataSet;
+import generator.DataVar;
 
 
 /**
@@ -30,9 +31,9 @@ public class JavascriptGenerator extends EngineGenerator {
     @Override
     public String generate() {
         try {
-            for (DataMap dataMap : data.getMaps()) {
-                write("var " + dataMap.getMapName() + " = ");
-                generateMap(dataMap);
+            for (DataVar dataVar : data.getVars()) {
+                write("var " + dataVar.getVarName() + " = ");
+                writeValue(dataVar.getValue());
                 writeln(";");
                 writeNewLine();
             }
@@ -45,10 +46,6 @@ public class JavascriptGenerator extends EngineGenerator {
     private void generateMap(DataMap dataMap) {
         writeln("{");
         indentMore();
-        if (!data.getMaps().contains(dataMap)) {
-            writeln("// " + dataMap.getMapName());
-        }
-
         boolean first = true;
         for (String key : dataMap.keySet()) {
             if (!first) {
@@ -66,22 +63,30 @@ public class JavascriptGenerator extends EngineGenerator {
     }
 
     private void generateArray(DataArray dataArray) {
-        writeln("[");
-        if (!dataArray.isEmpty()) {
+        Class commonClassAllElements = dataArray.getClassOfElements();
+        // if all elements in this array are all numbers or all Strings, then put them in a single line
+        // otherwise, put each element in a new line
+        boolean useNewLines = commonClassAllElements == DataSet.class || commonClassAllElements == Object.class;
+
+        write("[");
+        if (useNewLines && !dataArray.isEmpty()) {
+            writeNewLine();
             indentMore();
-            boolean first = true;
-            for (Object value : dataArray) {
-                if (!first) {
-                    write(",");
-                    if (value instanceof DataSet) {
-                        write(" ");
-                    } else {
-                        writeNewLine();
-                    }
+        }
+        boolean first = true;
+        for (Object value : dataArray) {
+            if (!first) {
+                write(",");
+                if (value instanceof DataSet || !useNewLines) {
+                    write(" ");
+                } else {
+                    writeNewLine();
                 }
-                first = false;
-                writeValue(value);
             }
+            first = false;
+            writeValue(value);
+        }
+        if (useNewLines && !dataArray.isEmpty()) {
             writeNewLine();
             indentLess();
         }
@@ -89,17 +94,21 @@ public class JavascriptGenerator extends EngineGenerator {
     }
 
     private void writeValue(Object value) {
-        if (value instanceof Float) {
-            write(Float.toString((Float) value));
+        if (value instanceof Integer) {
+            write(Integer.toString((Integer) value));
         } else {
             if (value instanceof String) {
                 write("\"" + value + "\"");
             } else {
-                if (value instanceof DataMap) {
-                    generateMap((DataMap) value);
+                if (value instanceof Float) {
+                    write(Float.toString((Float) value));
                 } else {
-                    if (value instanceof DataArray) {
-                        generateArray((DataArray) value);
+                    if (value instanceof DataMap) {
+                        generateMap((DataMap) value);
+                    } else {
+                        if (value instanceof DataArray) {
+                            generateArray((DataArray) value);
+                        }
                     }
                 }
             }

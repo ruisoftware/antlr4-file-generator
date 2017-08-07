@@ -3,6 +3,7 @@ package generator.engine;
 import generator.Data;
 import generator.DataArray;
 import generator.DataMap;
+import generator.DataVar;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -47,9 +48,9 @@ public class JavaGenerator extends EngineGenerator {
             writeln("public class " + data.getFilename() + " {");
             writeNewLine();
             indentMore();
-            for (DataMap dataMap : data.getMaps()) {
-                write(String.format("private static final Map<String, %s> %s = ", dataMap.getClassOfValues().getSimpleName(), dataMap.getMapName()));
-                generateMap(dataMap);
+            for (DataVar dataVar : data.getVars()) {
+                writeValueDeclaration(dataVar);
+                writeValue(dataVar.getValue(), true);
                 writeln(";");
                 writeNewLine();
             }
@@ -61,18 +62,40 @@ public class JavaGenerator extends EngineGenerator {
         }
     }
 
+    private void writeValueDeclaration(DataVar dataVar) {
+        Object value = dataVar.getValue();
+        String javaType = getJavaType(value);
+        write(String.format("private static final %s %s = ", javaType, dataVar.getVarName()));
+    }
+
+    private String getJavaType(Object value) {
+        if (value instanceof Integer) {
+            return "int";
+        }
+        if (value instanceof Float) {
+            return "float";
+        }
+        if (value instanceof String) {
+            return String.class.getSimpleName();
+        }
+        if (value instanceof DataMap) {
+            return String.format("Map<String, %s>", ((DataMap) value).getClassOfValues().getSimpleName());
+        }
+        if (value instanceof DataArray) {
+            return String.format("List<%s>", ((DataArray) value).getClassOfElements().getSimpleName());
+        }
+        return Object.class.getSimpleName();
+    }
+
     private void generateMap(DataMap dataMap) {
-        write(String.format("new %s<String, %s>()", getMapImplementationClass(), dataMap.getClassOfValues().getSimpleName()));
+        write(String.format("new %s<String, %s>()", mapImplementation.getSimpleName(), dataMap.getClassOfValues().getSimpleName()));
         if (!dataMap.isEmpty()) {
             write(" {{");
-            if (!data.getMaps().contains(dataMap)) {
-                write(" // " + dataMap.getMapName());
-            }
             writeNewLine();
             indentMore();
             for (String key : dataMap.keySet()) {
                 write("put(\"" + key + "\", ");
-                writeValue(dataMap.get(key));
+                writeValue(dataMap.get(key), false);
                 writeln(");");
             }
             indentLess();
@@ -81,13 +104,13 @@ public class JavaGenerator extends EngineGenerator {
     }
 
     private void generateArray(DataArray dataArray) {
-        write(String.format("new %s<%s>()", getArrayImplementationClass(), dataArray.getClassOfElements().getSimpleName()));
+        write(String.format("new %s<%s>()", arrayImplementation.getSimpleName(), dataArray.getClassOfElements().getSimpleName()));
         if (!dataArray.isEmpty()) {
             writeln(" {{");
             indentMore();
             for (Object obj : dataArray) {
                 write("add(");
-                writeValue(obj);
+                writeValue(obj, false);
                 writeln(");");
             }
             indentLess();
@@ -95,18 +118,24 @@ public class JavaGenerator extends EngineGenerator {
         }
     }
 
-    private void writeValue(Object value) {
-        if (value instanceof Float) {
-            write("new Float(" + Float.toString((Float) value) + "f)");
+    private void writeValue(Object value, boolean usePrimitives) {
+        if (value instanceof Integer) {
+            String i = Integer.toString(((Integer) value).intValue());
+            write(usePrimitives ? i : "new Integer(" + i + ")");
         } else {
-            if (value instanceof String) {
-                write("\"" + value + "\"");
+            if (value instanceof Float) {
+                String f = Float.toString(((Float) value).floatValue());
+                write(usePrimitives ? f + "f" : "new Float(" + f + "f)");
             } else {
-                if (value instanceof DataMap) {
-                    generateMap((DataMap) value);
+                if (value instanceof String) {
+                    write("\"" + value + "\"");
                 } else {
-                    if (value instanceof DataArray) {
-                        generateArray((DataArray) value);
+                    if (value instanceof DataMap) {
+                        generateMap((DataMap) value);
+                    } else {
+                        if (value instanceof DataArray) {
+                            generateArray((DataArray) value);
+                        }
                     }
                 }
             }
@@ -134,20 +163,5 @@ public class JavaGenerator extends EngineGenerator {
             }
             writeNewLine();
         }
-    }
-
-    private String getArrayImplementationClass() {
-        return getClassName(arrayImplementation);
-    }
-
-    private String getMapImplementationClass() {
-        return getClassName(mapImplementation);
-    }
-
-    private String getClassName(Class packageClass) {
-        if (packageClass != null) {
-            return packageClass.getSimpleName();
-        }
-        return null;
     }
 }

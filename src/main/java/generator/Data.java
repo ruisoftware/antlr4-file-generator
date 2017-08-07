@@ -12,7 +12,7 @@ import java.util.Stack;
 public class Data {
 
     private String filename;
-    private List<DataMap> maps = new LinkedList<>();
+    private List<DataVar> vars = new LinkedList<>();
     private Object valueToBeInsertedLater;
     private Stack<DataSet> stackOfDataSets = new Stack<>();
     private byte qtMapsInStack, qtArraysInStack;
@@ -24,8 +24,8 @@ public class Data {
      **/
     private boolean containsMap, containsArray;
 
-    public List<DataMap> getMaps() {
-        return maps;
+    public List<DataVar> getVars() {
+        return vars;
     }
 
     public boolean isContainsMap() {
@@ -40,19 +40,19 @@ public class Data {
         return importsRequired;
     }
 
-    public void appendNewMap() {
-        if (qtMapsInStack == 0) {
-            maps.add(new DataMap());
-            containsMap = true;
-        }
+    public void appendNewVar() {
+        vars.add(new DataVar());
     }
 
-    public void setMapName(String mapName) {
-        getLastDataMap().setMapName(mapName);
+    public void setVar(String varName) {
+        DataVar lastDataVar = vars.get(vars.size() - 1);
+        lastDataVar.setVarName(varName);
+        lastDataVar.setValue(this.valueToBeInsertedLater);
     }
 
     public void putToLastMap(String key) {
-        getLastDataMap().put(key, valueToBeInsertedLater);
+        DataMap lastMap = (DataMap) stackOfDataSets.peek();
+        lastMap.put(key, valueToBeInsertedLater);
         valueToBeInsertedLater = null;
     }
 
@@ -104,10 +104,6 @@ public class Data {
                 setValueToBeInsertedLater(lastDataMap);
             }
         }
-    }
-
-    private DataMap getLastDataMap() {
-        return qtMapsInStack == 0 ? maps.get(maps.size() - 1) : (DataMap) stackOfDataSets.peek();
     }
 
     private void pushDataMap() {

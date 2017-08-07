@@ -3,33 +3,32 @@ grammar Mapping;
 config:
     filename=Str
     '='+
-    map+
+    var+
     EOF;
 
-map:
-    mapHeader
-    '(' mapEntry+ ')';
-
-mapHeader:
-    'map' name=Str;
-
-mapEntry:
-    key=Str '=' val=value;
+var:
+    varName=Str '=' value;
 
 value:
-    isNumber=Number | isStr=Str | array | mapValue;
+    isInt=Int | isFloat=Float | isStr=Str | array | map;
 
 array:
     '[' (value (',' value)*)? ']';
 
-mapValue:
-    map;
+map:
+    'map (' mapEntry+ ')';
+
+mapEntry:
+    key=Str '=' val=value;
 
 Str:
     ('A'..'Z' | 'a'..'z' | '_')('A'..'Z' | 'a'..'z' | '0'..'9' | '_')*;
 
-Number:
-    ('0'..'9')+(.('0'..'9')+)?;
+Int:
+    ('+'|'-')?('0'..'9')+;
+
+Float:
+    Int(.('0'..'9')+)?;
 
 WS: (' ' | '\t')+      -> channel(HIDDEN);
 NL: '\r'? '\n'         -> channel(HIDDEN);

@@ -29,18 +29,18 @@ public class DataFactory {
 
             // region enter methods
             @Override
+            public void enterVar(MappingParser.VarContext ctx) {
+                data.appendNewVar();
+            }
+
+            @Override
             public void enterMap(MappingParser.MapContext ctx) {
-                data.appendNewMap();
+                data.pushMapToValueToBeInsertedLater();
             }
 
             @Override
             public void enterArray(MappingParser.ArrayContext ctx) {
                 data.pushArrayToValueToBeInsertedLater();
-            }
-
-            @Override
-            public void enterMapValue(MappingParser.MapValueContext ctx) {
-                data.pushMapToValueToBeInsertedLater();
             }
             // endregion
 
@@ -58,11 +58,15 @@ public class DataFactory {
 
             @Override
             public void exitValue(MappingParser.ValueContext ctx) {
-                if (ctx.isNumber != null) {
-                    data.setValueToBeInsertedLater(new Float(ctx.isNumber.getText()));
+                if (ctx.isInt != null) {
+                    data.setValueToBeInsertedLater(new Integer(ctx.isInt.getText()));
                 } else {
-                    if (ctx.isStr != null) {
-                        data.setValueToBeInsertedLater(ctx.isStr.getText());
+                    if (ctx.isFloat != null) {
+                        data.setValueToBeInsertedLater(new Float(ctx.isFloat.getText()));
+                    } else {
+                        if (ctx.isStr != null) {
+                            data.setValueToBeInsertedLater(ctx.isStr.getText());
+                        }
                     }
                 }
             }
@@ -73,12 +77,12 @@ public class DataFactory {
             }
 
             @Override
-            public void exitMapHeader(MappingParser.MapHeaderContext ctx) {
-                data.setMapName(ctx.name.getText());
+            public void exitVar(MappingParser.VarContext ctx) {
+                data.setVar(ctx.varName.getText());
             }
 
             @Override
-            public void exitMapValue(MappingParser.MapValueContext ctx) {
+            public void exitMap(MappingParser.MapContext ctx) {
                 data.popMapToValueToBeInsertedLater();
             }
             // endregion

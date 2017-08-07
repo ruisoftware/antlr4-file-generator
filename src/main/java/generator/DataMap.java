@@ -9,16 +9,7 @@ import java.util.Map;
  */
 public class DataMap extends LinkedHashMap<String, Object> implements DataSet {
 
-    private String mapName;
     private Class mapOfValue;
-
-    public String getMapName() {
-        return mapName;
-    }
-
-    public void setMapName(String mapName) {
-        this.mapName = mapName;
-    }
 
     @Override
     public Object put(String key, Object value) {

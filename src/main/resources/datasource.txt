@@ -1,42 +1,46 @@
 FamilyTree
 ================
-map a (
-  why = [7]
-  xx = [1, [],  2]
-)
+x = map ( s = 2 )
 
+a = map (
+        why = [7]
+        xx = [-1, [],  2]
+    )
 
-map a1 (
-    vw = [
+b = 1
+c = [-1.5, 2, -3]
+
+a1 = map (
+        vw = [
             1,
-            map x (
+            map (
                 f = [99]
             ),
             2
          ]
-)
+    )
 
-map family (
-    mother = Marie
-    father =
-        map sub (
-            a = 1
-            b = 2
-        )
-    age = 34
-)
+family = map (
+        mother = Marie
+        father =
+            map (
+                a = 1
+                b = -2
+            )
+        age = 34
+    )
 
-map cars (
-    bmw = 234
-    vw = [
+cars = map (
+        bmw = 234
+        vw = [
             old,
-            55,
-            [new,
-            [ map k (a = 200),
-              map k (a = 300  f=[99, []])
-            ],
-             [2]
+            55, [
+                new, [
+                    map (a = 200),
+                    map (a = 300  f=[99, []] )
+                ],
+                [2]
             ],
             [45, _ege]
          ]
-)
+    )

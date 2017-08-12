@@ -1,11 +1,11 @@
 # antlr4-file-engine
 Automatically generates Java and JavaScript files based on information retrieved from a plain text file.
 
-This is a simple Java application that uses ANTL4 to read a raw text file and generate Java and Javascript files that basically contain the same data.  
+This is a simple Java application that uses ANTLR4 to read a raw text file and generate Java and Javascript files that basically contain the same data.  
 
-ANTL4 is included as a maven plugin
+ANTLR4 is included as a maven plugin. You might choose to direcly download the [jar file](http://www.antlr.org/download.html).
 ````xml
-<artifactId>maven-compiler-plugin</artifactId>
+<artifactId>antlr4-maven-plugin</artifactId>
 ````
 ## When can this be useful?
 The classic example is to make sure your Java POJOs map correcly to JSon objects.   
@@ -17,7 +17,7 @@ Run maven clean and install.
 ````bash
 mvn clean install
 ````
-This will let ANTL4 generate Java sources used to perform the lexing and parsing phrases on your text file, i.e.
+This will let ANTLR4 generate Java sources used to perform the lexing and parsing phrases on your text file, i.e.
 if your grammar is named `Mapping.g4` then a `MappingLexer.java`, `MappingParser.java` and `MappingBaseListener.java` are created.  
 Analogously, if your grammar is `math.g4`, then a `mathLexer.java`, `mathParser.java` and `mathBaseListener.java` are created. The later goes
 against the Java convention of capitalizing class names, so make sure your grammar is also capitalized.
@@ -129,8 +129,8 @@ var bar = {
 };
 ````
 
-# License
+## License
 This project is licensed under the terms of the [MIT license](https://opensource.org/licenses/mit-license.php)
 
-# Bug Reports & Feature Requests
+## Bug Reports & Feature Requests
 Please use the [issue tracker](https://github.com/ruisoftware/antlr4-file-generator/issues) to report any bugs or file feature requests.

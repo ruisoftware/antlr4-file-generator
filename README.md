@@ -1,4 +1,4 @@
-# antlr4-file-engine
+# antlr4-file-generator
 Automatically generates Java and JavaScript files based on information retrieved from a plain text file.
 
 This is a simple Java application that uses ANTLR4 to read a raw text file and generate Java and Javascript files that basically contain the same data.  

@@ -1,4 +1,4 @@
-import generator.Data;
+import engine.Data;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -15,7 +15,7 @@ import java.io.InputStream;
 public class DataFactory {
 
     public Data gatherAllData(InputStream in) throws IOException {
-        Data data = new Data();
+        final Data data = new Data();
 
         MappingLexer lexer = new MappingLexer(new ANTLRInputStream(in));
         MappingParser parser = new MappingParser(new CommonTokenStream(lexer));

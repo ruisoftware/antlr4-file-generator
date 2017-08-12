@@ -1,4 +1,4 @@
-package generator;
+package engine;
 
 import java.util.HashSet;
 import java.util.LinkedList;

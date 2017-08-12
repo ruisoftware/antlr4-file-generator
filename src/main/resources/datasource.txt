@@ -1,46 +1,14 @@
-FamilyTree
+SampleFile
 ================
-x = map ( s = 2 )
+foo = 3
 
-a = map (
-        why = [7]
-        xx = [-1, [],  2]
-    )
-
-b = 1
-c = [-1.5, 2, -3]
-
-a1 = map (
-        vw = [
-            1,
-            map (
-                f = [99]
-            ),
-            2
-         ]
-    )
-
-family = map (
-        mother = Marie
-        father =
-            map (
-                a = 1
-                b = -2
-            )
-        age = 34
-    )
-
-cars = map (
-        bmw = 234
-        vw = [
-            old,
-            55, [
-                new, [
-                    map (a = 200),
-                    map (a = 300  f=[99, []] )
-                ],
-                [2]
-            ],
-            [45, _ege]
-         ]
+bar = map (
+        a = -1.2
+        b = 0
+        c = [2, hello, [3]]
+        d = map (
+              d1 = 2
+              d2 = 200
+           )
+        e = []
     )

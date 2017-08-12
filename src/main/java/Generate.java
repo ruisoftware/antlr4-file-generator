@@ -1,7 +1,7 @@
 
-import generator.Data;
-import generator.engine.JavaGenerator;
-import generator.engine.JavascriptGenerator;
+import engine.Data;
+import engine.generator.JavaGenerator;
+import engine.generator.JavascriptGenerator;
 
 /**
  * Created by ruisoftware on 05/08/17.

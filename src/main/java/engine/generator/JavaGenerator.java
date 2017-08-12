@@ -1,9 +1,9 @@
-package generator.engine;
+package engine.generator;
 
-import generator.Data;
-import generator.DataArray;
-import generator.DataMap;
-import generator.DataVar;
+import engine.Data;
+import engine.DataArray;
+import engine.DataMap;
+import engine.DataVar;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;

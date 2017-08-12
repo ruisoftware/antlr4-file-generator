@@ -1,9 +1,14 @@
-Provider
+SampleFile
 ================
+foo = 3
 
-map customerInfo
-    INN = 453453
-    speed = 30
-    AcctId = 235234
-    Customer    =    Putin
-    CC = 32323
+bar = map (
+        a = -1.2
+        b = 0
+        c = [2, hello, [3]]
+        d = map (
+              d1 = 2
+              d2 = 200
+           )
+        e = []
+    )

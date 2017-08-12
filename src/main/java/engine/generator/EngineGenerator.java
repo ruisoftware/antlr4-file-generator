@@ -1,4 +1,4 @@
-package generator.engine;
+package engine.generator;
 
 import java.io.File;
 import java.io.IOException;
